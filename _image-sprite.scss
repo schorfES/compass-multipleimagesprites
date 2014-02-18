@@ -1,0 +1,119 @@
+// Create multiple sprites for regular displays and retina-displays:
+// -----------------------------------------------------------------------------
+
+
+// When set to true, a fix for compass is added to find the defined sprite
+// sheets path, this bug should be fixed upcoming compass versions:
+$image-sprite-compass-fix: true !default;
+
+// When set to true, the fix for respondjs on older IE's will be activated:
+$image-sprite-support-respondjs: false !default;
+
+// Folder name for non retina images:
+$image-sprite-path-default: "default/" !default;
+
+// Folder name for retina images:
+$image-sprite-path-retina: "retina/" !default;
+
+// File pattern for images to be added into the sprite sheet:
+$image-sprite-files: "*.png" !default;
+
+// List with nested lists as key value pair for "key" and "path" to define
+// multiple sprite sheets / sprite sheet sources:
+$image-sprite-urls: () !default;
+
+// Returns the path by a given key from the urls list:
+@function image-sprite-getpath($key) {
+	@for $i from 1 through length($image-sprite-urls) {
+		$value: nth($image-sprite-urls, $i);
+		@if nth($value, 1) == $key {
+			@return nth($value, 2);
+		}
+	}
+
+	@return null;
+}
+
+// Adds a key value pair of "key" and "path" to the urls list:
+@mixin image-sprite-addurl($key, $path) {
+	$value: $key $path;
+	$image-sprite-urls: append($image-sprite-urls, $value, "comma");
+
+
+	// Fixes a bug with compass where sprite images are not found:
+	@if ($image-sprite-compass-fix) {
+		.image-sprite-compass-fix {
+			$default: image-sprite-getdefaultpath($path);
+			$retina: image-sprite-getretinapath($path);
+
+			$sprites: sprite-map($default);
+			$sprites-retina: sprite-map($retina);
+
+			background: sprite-url($sprites);
+			background: sprite-url($sprites-retina);
+		}
+	}
+}
+
+// Returns the full path of the default images:
+@function image-sprite-getdefaultpath($path) {
+	@return "#{$path}#{$image-sprite-path-default}#{$image-sprite-files}";
+}
+
+// Returns the full path of the retina images:
+@function image-sprite-getretinapath($path) {
+	@return "#{$path}#{$image-sprite-path-retina}#{$image-sprite-files}";
+}
+
+// Builds the final output for non retina and retina devices:
+@mixin image-sprite($key, $name, $dimensions: false) {
+	$path: image-sprite-getpath($key);
+	$default: image-sprite-getdefaultpath($path);
+	$retina: image-sprite-getretinapath($path);
+
+	$sprites: sprite-map($default);
+	$sprites-retina: sprite-map($retina);
+
+	$xpos: 0;
+	$ypos: nth(sprite-position($sprites-retina, $name), 2) / 2;
+	$retina-width: image-width(sprite-path($sprites-retina)) / 2;
+	$retina-height: image-height(sprite-path($sprites-retina)) / 2;
+
+	@if ($dimensions) {
+		height: image-height(sprite-file($sprites, $name));
+		width: image-width(sprite-file($sprites, $name));
+	}
+
+	background-image: sprite-url($sprites);
+	background-position: $xpos nth(sprite-position($sprites, $name), 2);
+	background-repeat: no-repeat;
+
+	// IE7 and IE8 AlphaImageLoader filter fix:
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='crop');
+
+	@media
+		only screen and (-webkit-min-device-pixel-ratio: 1.5),
+		only screen and (   min--moz-device-pixel-ratio: 1.5),
+		only screen and (   -moz-min-device-pixel-ratio: 1.5),
+		only screen and (    -ms-min-device-pixel-ratio: 1.5),
+		only screen and (     -o-min-device-pixel-ratio: 1.5/1),
+		only screen and (        min-device-pixel-ratio: 1.5),
+		only screen and (                min-resolution: 2dppx) {
+
+		background-image: sprite-url($sprites-retina);
+		background-position: $xpos $ypos;
+		@include background-size($retina-width $retina-height);
+	}
+
+	@if ($image-sprite-support-respondjs) {
+		// Fix for to display retina images on IE8 with respond.js
+		// URL of solution:
+		// http://stackoverflow.com/questions/9006583/how-do-i-prevent-respond-js-reading-my-retina-display-media-query */
+
+		@media (-webkit-useless-fake-property: 2) {
+			background-image: sprite-url($sprites);
+			background-position: $xpos nth(sprite-position($sprites, $name), 2);
+			background-size: auto auto;
+		}
+	}
+}
