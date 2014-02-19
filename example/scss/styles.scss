@@ -1,0 +1,23 @@
+@import "compass/css3/inline-block";
+@import "../../image-sprite";
+
+@include image-sprite-addurl("common", "common/");
+@include image-sprite-addurl("themeA", "theme-a/");
+
+.logo {
+	@include image-sprite("common", "logo", true);
+	display: block;
+	overflow: hidden;
+	text-indent: -999px;
+}
+
+.button {
+	color: #000000;
+	font-family: Arial, sans-serif;
+	text-decoration: none;
+
+	span {
+		@include image-sprite("themeA", "cloud", true);
+		@include inline-block();
+	}
+}
