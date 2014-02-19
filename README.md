@@ -7,23 +7,23 @@ Create multiple sprites for regular displays and retina-displays. This compass m
 ## Usage
 
 ```SCSS
-	// import the image-sprite mixin:
-	@import "image-sprite";
-	
-	// setup your pathes:
-	// (you can add as much as you want)
-	@include image-sprite-addurl("common", "path-to-common/");
-	@include image-sprite-addurl("themeA", "path-to-theme-a/");
-	
-	// use your sprites:
-	.logo {
-		// include the logo from the default sprite:
-		@include image-sprite("common", "logo", true);
-	}
-	
-	.button {
-		@include image-sprite("themeA", "button", true);
-	}
+// import the image-sprite mixin:
+@import "image-sprite";
+
+// setup your pathes:
+// (you can add as much as you want)
+@include image-sprite-addurl("common", "path-to-common/");
+@include image-sprite-addurl("themeA", "path-to-theme-a/");
+
+// use your sprites:
+.logo {
+	// include the logo from the default sprite:
+	@include image-sprite("common", "logo", true);
+}
+
+.button {
+	@include image-sprite("themeA", "button", true);
+}
 ```
 
 ### @include image-sprite-addurl($key, $path);
