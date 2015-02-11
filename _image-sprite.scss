@@ -37,7 +37,7 @@ $image-sprite-urls: () !default;
 // Adds a key value pair of "key" and "path" to the urls list:
 @mixin image-sprite-addurl($key, $path) {
 	$value: $key $path;
-	$image-sprite-urls: append($image-sprite-urls, $value, "comma");
+	$image-sprite-urls: append($image-sprite-urls, $value, "comma") !global;
 
 
 	// Fixes a bug with compass where sprite images are not found:
