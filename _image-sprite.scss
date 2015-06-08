@@ -9,6 +9,9 @@ $image-sprite-compass-fix: true !default;
 // When set to true, the fix for respondjs on older IE's will be activated:
 $image-sprite-support-respondjs: false !default;
 
+// Support transparencies for older IE versions (IE7 and IE8)
+$image-sprite-support-old-ie: false !default;
+
 // Folder name for non retina images:
 $image-sprite-path-default: "default/" !default;
 
@@ -95,8 +98,10 @@ $image-sprite-urls: () !default;
 	background-position: $xpos nth(sprite-position($map, $name), 2);
 	background-repeat: no-repeat;
 
-	// IE7 and IE8 AlphaImageLoader filter fix:
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='crop');
+	@if ($image-sprite-support-old-ie) {
+		// IE7 and IE8 AlphaImageLoader filter fix:
+		filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='crop');
+	}
 
 	@media
 		only screen and (-webkit-min-device-pixel-ratio: 1.5),
