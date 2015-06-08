@@ -22,37 +22,16 @@ $image-sprite-files: "*.png" !default;
 // multiple sprite sheets / sprite sheet sources:
 $image-sprite-urls: () !default;
 
-// Returns the path by a given key from the urls list:
-@function image-sprite-getpath($key) {
+// Returns the registered sprite config by the given key
+@function image-sprite-getregisteredsprite($key) {
 	@for $i from 1 through length($image-sprite-urls) {
 		$value: nth($image-sprite-urls, $i);
 		@if nth($value, 1) == $key {
-			@return nth($value, 2);
+			@return $value;
 		}
 	}
 
 	@return null;
-}
-
-// Adds a key value pair of "key" and "path" to the urls list:
-@mixin image-sprite-addurl($key, $path) {
-	$value: $key $path;
-	$image-sprite-urls: append($image-sprite-urls, $value, "comma") !global;
-
-
-	// Fixes a bug with compass where sprite images are not found:
-	@if ($image-sprite-compass-fix) {
-		.image-sprite-compass-fix {
-			$default: image-sprite-getdefaultpath($path);
-			$retina: image-sprite-getretinapath($path);
-
-			$sprites: sprite-map($default);
-			$sprites-retina: sprite-map($retina);
-
-			background: sprite-url($sprites);
-			background: sprite-url($sprites-retina);
-		}
-	}
 }
 
 // Returns the full path of the default images:
@@ -65,27 +44,55 @@ $image-sprite-urls: () !default;
 	@return "#{$path}#{$image-sprite-path-retina}#{$image-sprite-files}";
 }
 
-// Builds the final output for non retina and retina devices:
-@mixin image-sprite($key, $name, $dimensions: false) {
-	$path: image-sprite-getpath($key);
+// Adds a key value pair of "key" and "path" to the urls list:
+@mixin image-sprite-addurl($key, $path) {
 	$default: image-sprite-getdefaultpath($path);
 	$retina: image-sprite-getretinapath($path);
+	$map: sprite-map($default);
+	$map-retina: sprite-map($retina);
+	$url: sprite-url($map);
+	$url-retina: sprite-url($map-retina);
 
-	$sprites: sprite-map($default);
-	$sprites-retina: sprite-map($retina);
+	// Store data for the current sprite sheet in a list:
+	// 1st: key
+	// 2nd: path
+	// 3rd: map (default)
+	// 4th: map for retina resoulutions
+	// 5th: sprite url (default)
+	// 6th: sprite retina url
+	$value: $key $path $map $map-retina $url $url-retina;
+	$image-sprite-urls: append($image-sprite-urls, $value, "comma") !global;
+
+	// Fixes a bug with compass where sprite images are not found:
+	@if ($image-sprite-compass-fix) {
+		.image-sprite-compass-fix {
+			background: $url;
+			background: $url-retina;
+		}
+	}
+}
+
+// Builds the final output for non retina and retina devices:
+@mixin image-sprite($key, $name, $dimensions: false) {
+	$sprite: image-sprite-getregisteredsprite($key);
+	$path: nth($sprite, 2);
+	$map: nth($sprite, 3);
+	$map-retina: nth($sprite, 4);
+	$url: nth($sprite, 5);
+	$url-retina: nth($sprite, 6);
 
 	$xpos: 0;
-	$ypos: nth(sprite-position($sprites-retina, $name), 2) / 2;
-	$retina-width: image-width(sprite-path($sprites-retina)) / 2;
-	$retina-height: image-height(sprite-path($sprites-retina)) / 2;
+	$ypos: nth(sprite-position($map-retina, $name), 2) / 2;
+	$retina-width: image-width(sprite-path($map-retina)) / 2;
+	$retina-height: image-height(sprite-path($map-retina)) / 2;
 
 	@if ($dimensions) {
-		height: image-height(sprite-file($sprites, $name));
-		width: image-width(sprite-file($sprites, $name));
+		height: image-height(sprite-file($map, $name));
+		width: image-width(sprite-file($map, $name));
 	}
 
-	background-image: sprite-url($sprites);
-	background-position: $xpos nth(sprite-position($sprites, $name), 2);
+	background-image: $url;
+	background-position: $xpos nth(sprite-position($map, $name), 2);
 	background-repeat: no-repeat;
 
 	// IE7 and IE8 AlphaImageLoader filter fix:
@@ -93,14 +100,14 @@ $image-sprite-urls: () !default;
 
 	@media
 		only screen and (-webkit-min-device-pixel-ratio: 1.5),
-		only screen and (   min--moz-device-pixel-ratio: 1.5),
-		only screen and (   -moz-min-device-pixel-ratio: 1.5),
-		only screen and (    -ms-min-device-pixel-ratio: 1.5),
-		only screen and (     -o-min-device-pixel-ratio: 1.5/1),
-		only screen and (        min-device-pixel-ratio: 1.5),
-		only screen and (                min-resolution: 2dppx) {
+		only screen and (min--moz-device-pixel-ratio: 1.5),
+		only screen and (-moz-min-device-pixel-ratio: 1.5),
+		only screen and (-ms-min-device-pixel-ratio: 1.5),
+		only screen and (-o-min-device-pixel-ratio: 1.5/1),
+		only screen and (min-device-pixel-ratio: 1.5),
+		only screen and (min-resolution: 2dppx) {
 
-		background-image: sprite-url($sprites-retina);
+		background-image: $url-retina;
 		background-position: $xpos $ypos;
 		@include background-size($retina-width $retina-height);
 	}
@@ -111,8 +118,8 @@ $image-sprite-urls: () !default;
 		// http://stackoverflow.com/questions/9006583/how-do-i-prevent-respond-js-reading-my-retina-display-media-query */
 
 		@media (-webkit-useless-fake-property: 2) {
-			background-image: sprite-url($sprites);
-			background-position: $xpos nth(sprite-position($sprites, $name), 2);
+			background-image: $url;
+			background-position: $xpos nth(sprite-position($map, $name), 2);
 			background-size: auto auto;
 		}
 	}
