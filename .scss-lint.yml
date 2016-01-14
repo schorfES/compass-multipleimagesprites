@@ -1,0 +1,385 @@
+# Default application configuration that all configurations inherit from.
+
+scss_files: "**/*.scss"
+
+linters:
+  BangFormat:
+    # Reports when you use improper spacing around ! (the "bang") in !important
+    # and !default declarations.
+    enabled: true
+    space_before_bang: true
+    space_after_bang: false
+
+  BorderZero:
+    # Prefer the terser border: 0 over border: none.
+    enabled: true
+    convention: zero # or `none`
+
+  ColorKeyword:
+    #Prefer hexadecimal color codes over color keywords.
+    enabled: true
+
+  ColorVariable:
+    # Prefer color literals (keywords or hexadecimal codes) to be used only in
+    # variable declarations. They should be referred to via variables everywhere
+    # else.
+    enabled: true
+
+  Comment:
+    # Prefer // comments over /* ... */.
+    enabled: true
+
+  DebugStatement:
+    # Reports @debug statements (which you probably left behind accidentally).
+    enabled: true
+
+  DeclarationOrder:
+    # Rule sets should be ordered as follows: @extend declarations, @include
+    # declarations without inner @content, properties, @include declarations
+    # with inner @content, then nested rule sets.
+    enabled: false
+
+  DuplicateProperty:
+    # Reports when you define the same property twice in a single rule set.
+    enabled: false
+
+  ElsePlacement:
+    # Place @else statements on the same line as the preceding curly brace.
+    enabled: true
+    style: same_line # or 'new_line'
+
+  EmptyLineBetweenBlocks:
+    # Separate rule, function, and mixin declarations with empty lines.
+    enabled: true
+    ignore_single_line_blocks: false
+
+  EmptyRule:
+    # Reports when you have an empty rule set.
+    enabled: true
+
+  FinalNewline:
+    # Files should always have a final newline. This results in better diffs
+    # when adding lines to the file, since SCM systems such as git won't think
+    # that you touched the last line.
+    enabled: true
+    present: true
+
+  HexLength:
+    # You can specify whether you prefer shorthand or long-form hexadecimal
+    # colors by setting the style option to short or long, respectively.
+    enabled: true
+    style: long # or 'short'
+
+  HexNotation:
+    # Checks if hexadecimal colors are written in lowercase. You can specify
+    # which case with the style option.
+    enabled: true
+    style: uppercase # or 'lowercase'
+
+  HexValidation:
+    # Ensure hexadecimal colors are valid (either three or six digits).
+    enabled: true
+
+  IdSelector:
+    # Avoid using ID selectors.
+    enabled: true
+
+  ImportantRule:
+    # Avoid using !important in properties. It is usually indicative of a
+    # misunderstanding of CSS specificity and can lead to brittle code.
+    enabled: false
+
+  ImportPath:
+    # The basenames of @imported SCSS partials should not begin with an
+    # underscore and should not include the filename extension.
+    enabled: true
+    leading_underscore: false
+    filename_extension: false
+
+  Indentation:
+    # Use two spaces per indentation level.
+    enabled: true
+    allow_non_nested_indentation: false
+    character: tab # or 'space'
+    width: 1
+
+  LeadingZero:
+    # Don't write leading zeros for numeric values with a decimal point.
+    enabled: true
+    style: include_zero # or 'exclude_zero'
+
+  MergeableSelector:
+    # Reports when you define the same selector twice in a single sheet.
+    enabled: true
+    force_nesting: true
+
+  NameFormat:
+    # Functions, mixins, and variables should be declared with all lowercase
+    # letters and hyphens instead of underscores.
+    enabled: true
+    allow_leading_underscore: true
+    convention: hyphenated_lowercase # or 'BEM', or a regex pattern
+
+  NestingDepth:
+    # Avoid nesting selectors too deeply. See also "SelectorDepth"
+    enabled: true
+    max_depth: 8
+
+  SelectorDepth:
+    # Don't write selectors with a depth of applicability greater than 4.
+    enabled: true
+    max_depth: 4
+
+  PlaceholderInExtend:
+    # Always use placeholder selectors in @extend.
+    enabled: true
+
+  PropertyCount:
+    # Limit the number of properties in a rule set.
+    # Specifying a large number of properties in a rule set is usually an
+    # opportunity to break down the rule set into smaller more reusable
+    # components. It is also a sign that you might not be leveraging the true
+    # power of the "cascade", as you are explicitly defining a large number of
+    # properties many times.
+    enabled: false
+    include_nested: false
+    max_properties: 10
+
+  PropertyUnits:
+    # Configure which units are allowed for property values.
+    # By default a value may have any kind of unit. You can adjust which units
+    # are allowed globally by setting the global option. Alternately, you can
+    # specify a list of units for a single property by adding it to the
+    # properties option, e.g.
+    enabled: true
+    global: [
+      'ch', 'em', 'ex', 'rem',                 # Font-relative lengths
+      'cm', 'in', 'mm', 'pc', 'pt', 'px', 'q', # Absolute lengths
+      'vh', 'vw', 'vmin', 'vmax',              # Viewport-percentage lengths
+      'deg', 'grad', 'rad', 'turn',            # Angle
+      'ms', 's',                               # Duration
+      'Hz', 'kHz',                             # Frequency
+      'dpi', 'dpcm', 'dppx',                   # Resolution
+      '%',                                     # Other
+    ]
+    properties: {
+        margin: ['px', 'em', '%'],
+        padding: ['px', 'em', '%'],
+        line-height: [],
+        font: ['em', 'rem'],
+        border: ['px']
+    }
+
+  PropertySortOrder:
+    # Sort properties in a strict order.
+    enabled: true
+    ignore_unspecified: false
+    separate_groups: false # groups are disabled, but used to define ordering
+    order:
+      - content
+      - speak
+      - counter-reset
+      - counter-increment
+      - cursor
+      - pointer-events
+      - user-select
+      - touch-action
+      - touch-callout
+      - tap-highlight-color
+      -
+      - box-sizing
+      - zoom
+      - display
+      - table-layout
+      - flex-basis
+      - flex-direction
+      - flex-grow
+      - flex-shrink
+      - flex-wrap
+      - order
+      - overflow
+      - overflow-x
+      - overflow-y
+      - overflow-scrolling
+      - visibility
+      - opacity
+      - float
+      - clear
+      - position
+      - top
+      - right
+      - bottom
+      - left
+      - z-index
+      - margin
+      - margin-top
+      - margin-right
+      - margin-bottom
+      - margin-left
+      - padding
+      - padding-top
+      - padding-right
+      - padding-bottom
+      - padding-left
+      - width
+      - min-width
+      - max-width
+      - height
+      - min-height
+      - max-height
+      -
+      - background
+      - background-color
+      - background-image
+      - background-repeat
+      - background-position
+      - background-attachment
+      - background-size
+      - border
+      - border-top
+      - border-right
+      - border-bottom
+      - border-left
+      - border-width
+      - border-style
+      - border-color
+      - border-image
+      - outline
+      - outline-width
+      - outline-style
+      - outline-color
+      - outline-offset
+      -
+      - color
+      - font
+      - font-family
+      - font-size
+      - font-weight
+      - font-style
+      - font-variant
+      - line-height
+      - list-style
+      - list-style-type
+      - list-style-position
+      - list-style-image
+      - text-align
+      - text-transform
+      - text-decoration
+      - text-indent
+      - text-shadow
+      - vertical-align
+      - white-space
+      - word-break
+      - word-spacing
+      - word-wrap
+
+  PropertySpelling:
+    # Reports when you use an unknown CSS property (ignoring vendor-prefixed
+    # properties).
+    enabled: true
+    extra_properties: []
+
+  QualifyingElement:
+    # Avoid qualifying elements in selectors (also known as "tag-qualifying").
+    enabled: true
+    allow_element_with_attribute: false
+    allow_element_with_class: false
+    allow_element_with_id: false
+
+  SelectorFormat:
+    # It is good practice to choose a convention for naming selectors.
+    enabled: true
+    convention: hyphenated_lowercase # or 'BEM', or 'hyphenated_BEM', or 'snake_case', or 'camel_case', or a regex pattern
+
+  Shorthand:
+    # Prefer the shortest shorthand form possible for properties that support it.
+    enabled: true
+
+  SingleLinePerProperty:
+    # Properties within rule sets should each reside on their own line.
+    enabled: true
+    allow_single_line_rule_sets: true
+
+  SingleLinePerSelector:
+    # Split selectors onto separate lines after each comma.
+    enabled: true
+
+  SpaceAfterComma:
+    # Commas in lists should be followed by a space.
+    enabled: true
+
+  SpaceAfterPropertyColon:
+    # Properties should be formatted with a single space separating the
+    # colon from the property's value.
+    enabled: true
+    style: one_space # or 'no_space', or 'at_least_one_space', or 'aligned'
+
+  SpaceAfterPropertyName:
+    # Properties should be formatted with no space between the name and the colon.
+    enabled: false
+
+  SpaceBeforeBrace:
+    # Opening braces should be preceded by a single space.
+    enabled: true
+    style: space # or 'new_line'
+    allow_single_line_padding: false
+
+  SpaceBetweenParens:
+    # Parentheses should not be padded with spaces.
+    enabled: true
+    spaces: 0
+
+  StringQuotes:
+    # String literals should be written with single quotes unless using double
+    # quotes would save on escape characters.
+    enabled: true
+    style: double_quotes # or single_quotes
+
+  TrailingSemicolon:
+    # Property values; @extend, @include, and @import directives; and variable
+    # declarations should always end with a semicolon.
+    enabled: false
+
+  TrailingZero:
+    # Don't write trailing zeros for numeric values with a decimal point.
+    enabled: true
+
+  UnnecessaryMantissa:
+    # Numeric values should not contain unnecessary fractional portions.
+    enabled: true
+
+  UnnecessaryParentReference:
+    # Do not use parent selector references (&) when they would otherwise be
+    # unnecessary.
+    enabled: true
+
+  UrlFormat:
+    # URLs should not contain protocols or domain names.
+    # Including protocols or domains in URLs makes them brittle to change,
+    # and also unnecessarily increases the size of your CSS documents, reducing
+    # performance.
+    enabled: true
+
+  UrlQuotes:
+    # URLs should always be enclosed within quotes.
+    enabled: true
+
+  VariableForProperty:
+    # Properties, like color and font, are easier to read and maintain when
+    # defined using variables rather than literals.
+    enabled: true
+    properties: ['color', 'font-family']
+
+  VendorPrefix:
+    # Avoid vendor prefixes. That is, don't write them yourself.
+    enabled: false
+    identifier_list: base
+    additional_identifiers: []
+    excluded_identifiers: []
+
+  ZeroUnit:
+    # Omit length units on zero values.
+    enabled: true
+
+  Compass::*:
+    enabled: false
