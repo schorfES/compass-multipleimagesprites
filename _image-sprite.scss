@@ -21,6 +21,9 @@ $image-sprite-path-retina: "retina/" !default;
 // File pattern for images to be added into the sprite sheet:
 $image-sprite-files: "*.png" !default;
 
+// Spaces between images in sprite:
+$image-sprite-spacing: 0 !default;
+
 // List with nested lists as key value pair for "key" and "path" to define
 // multiple sprite sheets / sprite sheet sources:
 $image-sprite-urls: () !default;
@@ -51,8 +54,8 @@ $image-sprite-urls: () !default;
 @mixin image-sprite-addurl($key, $path) {
 	$default: image-sprite-getdefaultpath($path);
 	$retina: image-sprite-getretinapath($path);
-	$map: sprite-map($default);
-	$map-retina: sprite-map($retina);
+	$map: sprite-map($default, $spacing: $image-sprite-spacing);
+	$map-retina: sprite-map($retina, $spacing: $image-sprite-spacing * 2);
 	$url: sprite-url($map);
 	$url-retina: sprite-url($map-retina);
 
@@ -90,8 +93,8 @@ $image-sprite-urls: () !default;
 	$retina-height: image-height(sprite-path($map-retina)) / 2;
 
 	@if ($dimensions) {
-		height: image-height(sprite-file($map, $name));
 		width: image-width(sprite-file($map, $name));
+		height: image-height(sprite-file($map, $name));
 	}
 
 	background-image: $url;
