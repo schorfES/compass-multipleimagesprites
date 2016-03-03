@@ -132,3 +132,18 @@ $image-sprite-urls: () !default;
 		}
 	}
 }
+
+
+// Returns the width of a spritesheet by key and element by name:
+@function image-sprite-width($key, $name) {
+	$sprite: image-sprite-getregisteredsprite($key);
+	$map: nth($sprite, 3);
+	@return image-width(sprite-file($map, $name));
+}
+
+// Returns the height of a spritesheet by key and element by name:
+@function image-sprite-height($key, $name) {
+	$sprite: image-sprite-getregisteredsprite($key);
+	$map: nth($sprite, 3);
+	@return image-height(sprite-file($map, $name));
+}
